@@ -1,12 +1,18 @@
 package com.nexgal.zoom;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.nexgal.zoom.features.camera.CameraManager;
 
 public class MainActivity extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CAMERA = 100001;
@@ -20,6 +26,18 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
+        CameraManager manager = CameraManager.getCameraManager();
+        if (!manager.checkCameraUsable(this)) {
+            new AlertDialog.Builder(this)
+                    .setMessage("카메라가 사용 불가합니다.")
+                    .setNeutralButton("종료", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+                            System.exit(0);
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override
@@ -30,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     // 권한이 승인된 경우 그리기
                     recreate();
                 } else {
-                    // 권한 승이 안된 경우 종료
+                    // 권한 승인 안된 경우 종료
                     finish();
                 }
                 break;
