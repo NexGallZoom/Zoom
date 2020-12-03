@@ -11,13 +11,15 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.nexgal.zoom.features.camera.CameraManager;
 import com.nexgal.zoom.features.camera.CameraPreview;
 
 public class MainActivity extends AppCompatActivity {
-    private final static int PERMISSION_REQUEST_CAMERA = 100001;
+    private static final int PERMISSION_REQUEST_CAMERA = 100001;
+
     private CameraPreview cameraPreview;
 
     @Override
@@ -42,12 +44,10 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
-
         Camera camera = manager.getCamera();
         cameraPreview = new CameraPreview(this, camera);
         FrameLayout preview = findViewById(R.id.camera_preview);
         preview.addView(cameraPreview);
-
     }
 
     @Override
@@ -65,5 +65,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    public void changeCamera(View view) {
+        CameraManager manager = CameraManager.getCameraManager();
+        Camera camera = manager.getNextCamera();
+        cameraPreview.changeCamera(camera);
     }
 }
