@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,6 +20,7 @@ import com.nexgal.zoom.features.camera.CameraPreview;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CAMERA = 100001;
+    private static final int PERMISSION_REQUEST_SAVE_FILE = 100002;
 
     private CameraPreview cameraPreview;
 
@@ -31,7 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
                 return;
             }
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_SAVE_FILE);
+                return;
+            }
+
         }
+
         CameraManager manager = CameraManager.getCameraManager();
         if (!manager.checkCameraUsable(this)) {
             new AlertDialog.Builder(this)
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
+
         Camera camera = manager.getCamera();
         cameraPreview = new CameraPreview(this, camera);
         FrameLayout preview = findViewById(R.id.camera_preview);
@@ -53,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
+            case PERMISSION_REQUEST_SAVE_FILE:
             case PERMISSION_REQUEST_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 권한이 승인된 경우 그리기
