@@ -14,6 +14,7 @@ import android.os.storage.StorageManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.nexgal.zoom.features.camera.CameraManager;
 import com.nexgal.zoom.features.camera.CameraPreview;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_SAVE_FILE = 100002;
 
     private CameraPreview cameraPreview;
+    private Camera camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         cameraPreview = new CameraPreview(this, camera);
         FrameLayout preview = findViewById(R.id.camera_preview);
         preview.addView(cameraPreview);
+        this.camera = camera;
+
     }
 
     @Override
@@ -81,5 +85,11 @@ public class MainActivity extends AppCompatActivity {
         CameraManager manager = CameraManager.getCameraManager();
         Camera camera = manager.getNextCamera();
         cameraPreview.changeCamera(camera);
+    }
+
+    public void takePicture(View view) {
+        CameraManager cameraManager = CameraManager.getCameraManager();
+        cameraManager.takeAndSaveImage(this.camera);
+        Toast.makeText(this, "저장 완료", Toast.LENGTH_LONG).show();
     }
 }

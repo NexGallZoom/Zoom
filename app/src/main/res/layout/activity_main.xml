@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:tag="촬영" />
+                android:onClick="takePicture"
+                android:text="촬영" />
 
             <Button
                 android:layout_width="wrap_content"
