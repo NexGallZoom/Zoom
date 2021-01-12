@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,9 @@ import android.widget.Toast;
 
 import com.nexgal.zoom.features.camera.CameraManager;
 import com.nexgal.zoom.features.camera.CameraPreview;
+import com.nexgal.zoom.features.camera.CameraStreamView;
+
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CAMERA = 100001;
@@ -61,6 +66,28 @@ public class MainActivity extends AppCompatActivity {
         preview.addView(cameraPreview);
         this.camera = camera;
 
+        FrameLayout preview2 = findViewById(R.id.camera_preview_second);
+        final CameraStreamView streamView = new CameraStreamView(this);
+
+        camera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                Camera.Parameters parameters = camera.getParameters();
+                int width = parameters.getPreviewSize().width;
+                int height = parameters.getPreviewSize().height;
+
+                YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+
+                byte[] bytes = out.toByteArray();
+
+                streamView.drawStream(bytes);
+            }
+        });
+
+        preview2.addView(streamView);
     }
 
     @Override
@@ -85,6 +112,28 @@ public class MainActivity extends AppCompatActivity {
         CameraManager manager = CameraManager.getCameraManager();
         Camera camera = manager.getNextCamera();
         cameraPreview.changeCamera(camera);
+        FrameLayout preview2 = findViewById(R.id.camera_preview_second);
+        preview2.removeAllViews();
+        final CameraStreamView streamView = new CameraStreamView(this);
+        camera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                Camera.Parameters parameters = camera.getParameters();
+                int width = parameters.getPreviewSize().width;
+                int height = parameters.getPreviewSize().height;
+
+                YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+
+                byte[] bytes = out.toByteArray();
+
+                streamView.drawStream(bytes);
+            }
+        });
+
+        preview2.addView(streamView);
     }
 
     public void takePicture(View view) {

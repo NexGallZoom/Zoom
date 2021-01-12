@@ -100,21 +100,21 @@ public class CameraManager {
 
     }
 
-    private static File getOutputMediaFile(int type){
+    private static File getOutputMediaFile(int type) {
         File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"ZoomPictures"
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ZoomPictures"
         );
 
-        if(!mediaStorageDir.exists()){
-            if(!mediaStorageDir.mkdir()){
-                Log.e("CameraManager","파일 디렉토리 생성 실패");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdir()) {
+                Log.e("CameraManager", "파일 디렉토리 생성 실패");
                 return null;
             }
         }
         String timeStamp = new SimpleDateFormat("YYYYMMDDHHmmss").format(new Date());
         File mediaFile;
-        if(type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath()+File.separator + "IMG"+timeStamp+".jpg");
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG" + timeStamp + ".jpg");
         } else {
             return null;
         }
@@ -122,6 +122,6 @@ public class CameraManager {
     }
 
     public void takeAndSaveImage(Camera camera) {
-        camera.takePicture(null,null,getTakePictureCallback());
+        camera.takePicture(null, null, getTakePictureCallback());
     }
 }
