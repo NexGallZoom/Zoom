@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.view.Gravity;
 import android.view.TextureView;
+import android.widget.FrameLayout;
 
 public class CameraStreamView extends TextureView implements CameraStreamCallback {
     private BitmapFactory.Options bitmapOption;
@@ -34,5 +36,7 @@ public class CameraStreamView extends TextureView implements CameraStreamCallbac
         this.unlockCanvasAndPost(canvas);
     }
 
-
+    public void initialize() {
+        this.setLayoutParams(new FrameLayout.LayoutParams(360, 270, Gravity.LEFT));
+    }
 }
