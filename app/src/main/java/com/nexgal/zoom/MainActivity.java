@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.camera = camera;
+
     }
 
     @Override
@@ -145,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] bytes = out.toByteArray();
         for (CameraStreamView stream : this.streamViewList) {
-            stream.drawStream(bytes);
+            stream.drawStream(bytes,parameters.getJpegThumbnailSize());
         }
     }
+
 }

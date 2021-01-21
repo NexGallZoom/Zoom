@@ -124,4 +124,10 @@ public class CameraManager {
     public void takeAndSaveImage(Camera camera) {
         camera.takePicture(null, null, getTakePictureCallback());
     }
+
+    public boolean isFrontCamera() {
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(currentCamera, cameraInfo);
+        return cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
+    }
 }
