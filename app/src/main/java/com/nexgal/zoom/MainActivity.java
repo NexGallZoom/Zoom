@@ -16,13 +16,16 @@ import android.os.storage.StorageManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nexgal.zoom.features.camera.CameraManager;
 import com.nexgal.zoom.features.camera.CameraPreview;
 import com.nexgal.zoom.features.camera.CameraStreamView;
+import com.nexgal.zoom.features.chat.ChatTextAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -32,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CAMERA = 100001;
     private static final int PERMISSION_REQUEST_SAVE_FILE = 100002;
 
+
     private CameraPreview cameraPreview;
     private Camera camera;
 
     private List<CameraStreamView> streamViewList = new ArrayList<>();
+    private ChatTextAdapter chatTextAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.camera = camera;
+
+        this.chatTextAdapter = new ChatTextAdapter(this);
+        this.chatTextAdapter.addMessage("hello");
+
+        ListView chatList = new ListView(this);
+        chatList.setAdapter(this.chatTextAdapter);
+
+        preview.addView(chatList);
     }
 
     @Override
@@ -162,5 +175,11 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout streamLayout = findViewById(R.id.stream_list);
         streamLayout.removeViewInLayout(view);
         this.streamViewList.remove(streamView);
+    }
+
+    public void sendMessage(View view){
+        EditText text = (EditText)findViewById(R.id.message_edit);
+        chatTextAdapter.addMessage(text.getText().toString());
+        text.setText("");
     }
 }
