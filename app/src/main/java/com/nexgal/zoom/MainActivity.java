@@ -178,8 +178,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view){
-        EditText text = (EditText)findViewById(R.id.message_edit);
-        chatTextAdapter.addMessage(text.getText().toString());
-        text.setText("");
+        EditText editText = (EditText)findViewById(R.id.message_edit);
+        String message = editText.getText().toString();
+        this.chatTextAdapter.addMessage(message);
+        this.chatTextAdapter.notifyDataSetChanged();
+        editText.setText("");
     }
 }
