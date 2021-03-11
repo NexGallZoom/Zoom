@@ -22,7 +22,7 @@ public class ChatClient {
                     .setPath("/chat/")
                     .setTransports(new String[]{WebSocket.NAME})
                     .build();
-            this.socket = IO.socket("http://192.168.0.39:5000",options);
+            this.socket = IO.socket("http://192.168.0.12:5000",options);
             this.socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
