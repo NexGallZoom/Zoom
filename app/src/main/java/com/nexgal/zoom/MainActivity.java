@@ -29,6 +29,7 @@ import com.nexgal.zoom.features.camera.CameraPreview;
 import com.nexgal.zoom.features.camera.CameraStreamView;
 import com.nexgal.zoom.features.chat.ChatClient;
 import com.nexgal.zoom.features.chat.ChatTextAdapter;
+import com.nexgal.zoom.features.chat.ChatUpdateEvent;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -192,20 +193,30 @@ public class MainActivity extends AppCompatActivity {
         this.streamViewList.remove(streamView);
     }
 
-    public void sendMessage(View view){
-        EditText editText = (EditText)findViewById(R.id.message_edit);
+    public void sendMessage(View view) {
+        EditText editText = (EditText) findViewById(R.id.message_edit);
         String message = editText.getText().toString();
-        this.chatTextAdapter.addMessage(message);
-        this.chatTextAdapter.notifyDataSetChanged();
+        chatClient.send(message);
         editText.setText("");
     }
 
-    public Handler getMessageHandler(){
+    public Handler getMessageHandler() {
         return new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-                String message = (String) msg.obj;
-                chatTextAdapter.addMessage(message);
+                switch (msg.what) {
+                    case ChatUpdateEvent.RECEIVE_MESSAGE:
+                        String message = (String) msg.obj;
+                        chatTextAdapter.addMessage(message);
+                        break;
+                    case ChatUpdateEvent.UPDATE_MESSAGE:
+                        List<String> messageList = (List<String>) msg.obj;
+                        chatTextAdapter.updateMessage(messageList);
+                        break;
+                    default:
+                        break;
+                }
+
                 chatTextAdapter.notifyDataSetChanged();
                 return true;
             }

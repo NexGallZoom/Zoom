@@ -13,16 +13,17 @@ public class ChatTextAdapter extends BaseAdapter {
     private Context context;
     private List<String> chatTextList = new ArrayList<>();
 
-    public ChatTextAdapter(Context context){
+    public ChatTextAdapter(Context context) {
         this.context = context;
     }
 
-    public void addMessage(String message){
+    public void addMessage(String message) {
         System.out.println(message);
         this.chatTextList.add(message);
     }
+
     @Override
-    public int getCount(){
+    public int getCount() {
         return this.chatTextList.size();
     }
 
@@ -41,5 +42,9 @@ public class ChatTextAdapter extends BaseAdapter {
         TextView message = new TextView(this.context);
         message.setText(this.chatTextList.get(position));
         return message;
+    }
+
+    public void updateMessage(List<String> newMessageList) {
+        chatTextList = newMessageList;
     }
 }
